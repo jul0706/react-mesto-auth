@@ -1,13 +1,15 @@
-function PopupWithForm ({name, title, textSubmitButton, children}) {
+
+function PopupWithForm ({name, title, textSubmitButton,isOpen, onClose, children}) {
+
     return (
-        <div className={`popup ${name}`}> {/*Попап на всю страницу*/}
+        <div className={`popup ${name} ${isOpen && 'popup_is-opened'}`}> {/*Попап на всю страницу*/}
             <div className={`popup-container ${name}-container`}> {/*Окно формы*/}
-                <button className={`close-icon ${name}-container__close-icon`}></button> {/*Кнопка закрытия*/}
+                <button className={`close-icon ${name}-container__close-icon`} onClick={onClose}></button> {/*Кнопка закрытия*/}
                 <form name={`${name}`} action="#" className={`form-popup form-popup_type_${name}`} noValidate> {/*Форма*/}
                     <h2 className="form-popup__title">
                         {title}
                     </h2>
-                    {children}
+                    {children} {/*Разметка формы */}
                     <button type="submit" className="form-popup__button-save">{textSubmitButton}</button>                    
                 </form>
             </div>
