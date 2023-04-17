@@ -1,13 +1,14 @@
 import Header from "./Header";
 import Footer from "./Footer";
 import Main from "./Main";
-import React, { useState, useEffect } from 'react';
-import { doc } from "prettier";
+import React, {useState} from 'react';
+
 function App() {
   {/*Создаем внутренние состояния для попапов*/}
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false); 
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
 
   //функции бработчики - изменяют переменную состояния открытия попапов
   function handleEditAvatarClick () { 
@@ -21,10 +22,15 @@ function App() {
     setIsAddPlacePopupOpen(true);
   }
 
+  function handleCardImageClick () {
+    setSelectedCard(true);
+  }
+
   function handleCloseAllPopups () {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
+    setSelectedCard(null);
   }
 
   
@@ -39,6 +45,8 @@ function App() {
           onEditAvatar={handleEditAvatarClick}
           isEditAvatarPopupOpen={isEditAvatarPopupOpen}
           onClose={handleCloseAllPopups}
+          onCardClick={handleCardImageClick}
+          selectedCard={selectedCard}
         />
         <Footer />  
     </>

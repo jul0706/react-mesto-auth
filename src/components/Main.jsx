@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import PopupWithForm from './PopupWithForm';
 import api from '../utils/Api';
+import Card from './Card';
+import ImagePopup from './ImagePopup';
 
 function Main ({onEditProfile, isEditProfilePopupOpen, 
                 onAddPlace, isAddPlacePopupOpen, 
                 onEditAvatar, isEditAvatarPopupOpen,
-                onClose
+                onClose,
+                onCardClick, selectedCard
             }) {
 
     const [userName, setUserName] = useState(''); 
@@ -30,8 +33,7 @@ function Main ({onEditProfile, isEditProfilePopupOpen,
     },[])
     .catch(err => displayError(err));
         },[]
-    ) 
-    console.log(cards)
+    )
     return (
         <main className="main"> 
             {/*Блок profile*/}
@@ -52,23 +54,13 @@ function Main ({onEditProfile, isEditProfilePopupOpen,
                 {/*Блок Places*/}
             <section className="places">
                 {/*Заготовка для карточки*/}
-                {cards.map((card) => (
-                    <article key={card._id} className="place">
-                        <button className="place__delete-icon"></button>
-                        <img src={`${card.link}`}className="place__image" 
-                        /> {/*Изобажение*/}
-                        <div className="place__caption"> {/*Контейнер для нижней белой части*/}
-                            <h2 className="place__title">
-                                {card.name}
-                            </h2>
-                            <div className="place__like-area">
-                                <button type="button" className="place__like-button" aria-label="кнопка понравилось"></button>
-                                <p className='place__like-amount'>{card.likes.length}</p>
-                            </div>
-                        </div>
-                    </article>
+                {cards.map((card) => ( // каждую карточку из массива добавляем на страницу
+                    <Card 
+                        key = {card._id}
+                        cardData={card} 
+                        onCardClick = {onCardClick}
+                    />
                 ))}
-                {console.log('hhh')}
             </section>
             {/*Попап: Форма редактирования профиля*/}
         <PopupWithForm  
@@ -123,6 +115,11 @@ function Main ({onEditProfile, isEditProfilePopupOpen,
                     <span className="avatar-input-error form-popup__error"></span>
                 </fieldset>
         </PopupWithForm>
+
+        <ImagePopup 
+            card = {selectedCard}
+            onClose={onClose}
+        />
     </main>
     )
 }
