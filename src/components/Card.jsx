@@ -1,8 +1,9 @@
-function Card ({cardData, handleCardClick}) {
+function Card ({cardData, onCardClick}) {
+    
     return (
         <article className="place">
             <button className="place__delete-icon"></button>
-            <img src={`${cardData.link}`}className="place__image" 
+            <img src={`${cardData ? cardData.link : ''}`} className="place__image" onClick={()=>(onCardClick(cardData))}
              /> {/*Изобажение*/}
             <div className="place__caption"> {/*Контейнер для нижней белой части*/}
                 <h2 className="place__title">

@@ -55,11 +55,12 @@ function Main ({onEditProfile, isEditProfilePopupOpen,
             <section className="places">
                 {/*Заготовка для карточки*/}
                 {cards.map((card) => ( // каждую карточку из массива добавляем на страницу
+                    <div key = {card._id}>
                     <Card 
-                        key = {card._id}
-                        cardData={card} 
+                        cardData = {card} 
                         onCardClick = {onCardClick}
                     />
+                    </div>
                 ))}
             </section>
             {/*Попап: Форма редактирования профиля*/}
@@ -70,9 +71,9 @@ function Main ({onEditProfile, isEditProfilePopupOpen,
             isOpen={isEditProfilePopupOpen}
             onClose={onClose}>
                 <fieldset className="form-popup__inputs">
-                    <input type="text" id="name-input" name="name" className="form-popup__input form-popup__input_type_name" minLength="2" maxLength="40" placeholder="Ваше имя" required/>
+                    <input type="text" id="name-input" name="name" className="form-popup__input form-popup__input_type_name" minLength="2" maxLength="40" placeholder="Ваше имя" defaultValue = {userName} required/>
                     <span className="name-input-error form-popup__error"></span>
-                    <input type="text" id="job-input" name="about" className="form-popup__input form-popup__input_type_job" minLength="2" maxLength="200" placeholder="Ваш род деятельности" required/>
+                    <input type="text" id="job-input" name="about" className="form-popup__input form-popup__input_type_job" minLength="2" maxLength="200" placeholder="Ваш род деятельности" defaultValue = {userDescription} required/>
                     <span className="job-input-error form-popup__error"></span>
                 </fieldset>
         </PopupWithForm>
