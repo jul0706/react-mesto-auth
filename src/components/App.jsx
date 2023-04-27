@@ -7,6 +7,7 @@ import ImagePopup from './ImagePopup';
 import api from '../utils/Api';
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import { CardsContext } from "../contexts/CardsContext";
+import EditProfilePopup from "./EditProfilePopup";
 
 function App() {
   {/*стейты для попапов*/}
@@ -35,6 +36,7 @@ function App() {
     .then((res)=>{
       setCurrentUser(res); //сохранили в стэйт currentUser
     })
+    .catch(err => displayError(err));
   },[])
 
   //функции бработчики - изменяют переменную состояния открытия попапов
@@ -68,6 +70,7 @@ function App() {
       .then((newCard)=>{
         setCards((state)=> state.map((c) => c._id === card._id ? newCard : c))
       })
+      .catch(err => displayError(err));
   }
 
   function handleCardDelete(id) { //лайк/дизлайк карточки
@@ -75,6 +78,16 @@ function App() {
       .then(()=>{
         setCards((state)=> state.filter((c) => c._id != id))
       })
+      .catch(err => displayError(err));
+  }
+
+  function handleUpdateUser (userObject) {
+    api.editUserInfo(userObject)
+    .then((res) => {
+      setCurrentUser(res)
+    })
+    .catch(err => displayError(err));
+    handleCloseAllPopups();
   }
 
   
@@ -93,37 +106,11 @@ function App() {
         />
         <Footer /> 
         {/*Попап: Форма редактирования профиля*/}
-        <PopupWithForm  
-            title='Редактировать профиль' 
-            name='profile-popup'
-            textSubmitButton='Сохранить'
-            isOpen={isEditProfilePopupOpen}
-            onClose={handleCloseAllPopups}>
-                <fieldset className="form-popup__inputs">
-                    <input 
-                        type="text" 
-                        id="name-input" 
-                        name="name" 
-                        className="form-popup__input form-popup__input_type_name" 
-                        minLength="2" 
-                        maxLength="40" 
-                        placeholder="Ваше имя" 
-                        required
-                    />
-                    <span className="name-input-error form-popup__error"></span>
-                    <input 
-                        type="text" 
-                        id="job-input" 
-                        name="about" 
-                        className="form-popup__input form-popup__input_type_job" 
-                        minLength="2" 
-                        maxLength="200" 
-                        placeholder="Ваш род деятельности"
-                        required
-                    />
-                    <span className="job-input-error form-popup__error"></span>
-                </fieldset>
-        </PopupWithForm>
+        <EditProfilePopup 
+          isOpen={isEditProfilePopupOpen}
+          onClose={handleCloseAllPopups}
+          onUpdateUser={handleUpdateUser}
+        />
         {/*Попап: Форма добавления карточки*/}
         <PopupWithForm 
             title='Новое место' 

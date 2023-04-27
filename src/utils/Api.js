@@ -25,9 +25,9 @@ export class Api {
 		});
 	}
 
-	editUserInfo(data, configUrl) {
+	editUserInfo(data) {
 		// метод изменения информации о пользователе
-		return fetch(`${this._url}${configUrl}`, {
+		return fetch(`${this._url}/users/me`, {
 			method: 'PATCH',
 			headers: {
 				authorization: this._token,
