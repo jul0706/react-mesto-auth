@@ -61,8 +61,8 @@ export class Api {
 		});
 	}
 
-	deleteCard(id, configUrl) {
-		return fetch(`${this._url}${configUrl}/${id}`, {
+	deleteCard(cardId) {
+		return fetch(`${this._url}/cards/${cardId}`, {
 			method: 'DELETE',
 			headers: {
 				authorization: this._token
@@ -73,17 +73,32 @@ export class Api {
 		});
 	}
 
-	likeCard(id, configUrl, method) {
-		return fetch(`${this._url}${configUrl}/${id}/likes`, {
-			// вернули запрос
-			method: method,
-			headers: {
-				authorization: this._token
-			}
-		}).then(res => {
-			//проверили ответ
-			return this._checkResolve(res);
-		});
+	likeCard(cardId, isLiked) {
+		if (isLiked) {
+			//если пользователь лайкал карточку
+			return fetch(`${this._url}/cards/${cardId}/likes`, {
+				// вернули запрос
+				method: 'DELETE', //удалить лайк
+				headers: {
+					authorization: this._token
+				}
+			}).then(res => {
+				//проверили ответ
+				return this._checkResolve(res);
+			});
+		} else {
+			//если пользователь не лайкал карточку
+			return fetch(`${this._url}/cards/${cardId}/likes`, {
+				// вернули запрос
+				method: 'PUT', //добавить лайк
+				headers: {
+					authorization: this._token
+				}
+			}).then(res => {
+				//проверили ответ
+				return this._checkResolve(res);
+			});
+		}
 	}
 
 	changeAvatar(data, configUrl) {

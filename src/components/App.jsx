@@ -1,16 +1,41 @@
 import Header from "./Header";
 import Footer from "./Footer";
 import Main from "./Main";
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
+import api from '../utils/Api';
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import { CardsContext } from "../contexts/CardsContext";
 
 function App() {
-  {/*Создаем внутренние состояния для попапов*/}
+  {/*стейты для попапов*/}
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false); 
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
+  
+  const [currentUser, setCurrentUser] = useState(''); //стейт текущего пользователя
+  const [cards, setCards] = useState([]); //стейт карточек
+
+  function displayError (err) { //показ ошибки от сервера
+    alert(err)
+  };
+
+  useEffect(()=>{ //получили данные карточек
+    api.getDataServer('cards')
+    .then((res)=>{
+        setCards(res) //сохранили в стейт cards
+    })
+    .catch(err => displayError(err));
+  },[])
+  
+  useEffect(()=>{ //получили данные пользователя
+    api.getDataServer('users/me')
+    .then((res)=>{
+      setCurrentUser(res); //сохранили в стэйт currentUser
+    })
+  },[])
 
   //функции бработчики - изменяют переменную состояния открытия попапов
   function handleEditAvatarClick () { 
@@ -35,15 +60,36 @@ function App() {
     setSelectedCard(null);
   }
 
+  function handleCardLike(card) { //лайк/дизлайк карточки
+    const isUserLiked = card.likes.some((userLiked)=>{ //лайкал ли пользователь карточку
+      return userLiked._id === currentUser._id
+    })
+    api.likeCard(card._id, isUserLiked) //запрос на постановку/снятие лайка
+      .then((newCard)=>{
+        setCards((state)=> state.map((c) => c._id === card._id ? newCard : c))
+      })
+  }
+
+  function handleCardDelete(id) { //лайк/дизлайк карточки
+      api.deleteCard(id) //запрос на постановку/снятие лайка
+      .then(()=>{
+        setCards((state)=> state.filter((c) => c._id != id))
+      })
+  }
+
   
   return (
     <>
+      <CurrentUserContext.Provider value={currentUser}>
+      <CardsContext.Provider value={cards}>
         <Header />        
         <Main 
           onEditProfile={handleEditProfileClick}
           onAddPlace={handleAddPlaceClick}
           onEditAvatar={handleEditAvatarClick}
           onCardClick={handleCardImageClick}
+          onCardLike={handleCardLike}
+          onCardDelete={handleCardDelete}
         />
         <Footer /> 
         {/*Попап: Форма редактирования профиля*/}
@@ -143,6 +189,8 @@ function App() {
             card = {selectedCard}
             onClose={handleCloseAllPopups}
         />
+      </CardsContext.Provider>
+      </CurrentUserContext.Provider>
     </>
   );
 }
