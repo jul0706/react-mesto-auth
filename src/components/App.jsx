@@ -6,8 +6,9 @@ import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import api from '../utils/Api';
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import { CardsContext } from "../contexts/CardsContext";
 import EditProfilePopup from "./EditProfilePopup";
+import EditAvatarPopup from "./EditAvatarPopup";
+import AddPlacePopup from "./AddPlacePopup";
 
 function App() {
   {/*стейты для попапов*/}
@@ -73,8 +74,8 @@ function App() {
       .catch(err => displayError(err));
   }
 
-  function handleCardDelete(id) { //лайк/дизлайк карточки
-      api.deleteCard(id) //запрос на постановку/снятие лайка
+  function handleCardDelete(id) { //удаление карточки
+      api.deleteCard(id) //запрос на удаление карточки
       .then(()=>{
         setCards((state)=> state.filter((c) => c._id != id))
       })
@@ -90,11 +91,28 @@ function App() {
     handleCloseAllPopups();
   }
 
+  function handleUpdateAvatar (userObject) {
+    api.changeAvatar(userObject)
+    .then((res) => {
+      setCurrentUser(res)
+    })
+    .catch(err => displayError(err));
+    handleCloseAllPopups();
+  }
+
+  function handleAddCard (data) {
+    api.addCard(data)
+    .then((newCard) => {
+      setCards([newCard, ...cards ])
+    })
+    .catch(err => displayError(err));
+    handleCloseAllPopups();
+  }
+
   
   return (
     <>
       <CurrentUserContext.Provider value={currentUser}>
-      <CardsContext.Provider value={cards}>
         <Header />        
         <Main 
           onEditProfile={handleEditProfileClick}
@@ -103,6 +121,7 @@ function App() {
           onCardClick={handleCardImageClick}
           onCardLike={handleCardLike}
           onCardDelete={handleCardDelete}
+          cards={cards}
         />
         <Footer /> 
         {/*Попап: Форма редактирования профиля*/}
@@ -112,35 +131,11 @@ function App() {
           onUpdateUser={handleUpdateUser}
         />
         {/*Попап: Форма добавления карточки*/}
-        <PopupWithForm 
-            title='Новое место' 
-            name='add-button-popup'
-            textSubmitButton='Создать'
-            isOpen={isAddPlacePopupOpen}
-            onClose={handleCloseAllPopups}>
-                <fieldset className="form-popup__inputs">
-                    <input 
-                        type="text" 
-                        id='place-input' 
-                        name="name" 
-                        className="form-popup__input form-popup__input_type_place" 
-                        minLength="2" 
-                        maxLength="30" 
-                        placeholder="Название" 
-                        required 
-                    />
-                    <span className="place-input-error form-popup__error"></span>
-                    <input 
-                        type="url" 
-                        id="link-input" 
-                        name="link" 
-                        className="form-popup__input form-popup__input_type_link" 
-                        placeholder="Ссылка на картинку" 
-                        required 
-                    />
-                    <span className="link-input-error form-popup__error"></span>
-                </fieldset>
-        </PopupWithForm>        
+        <AddPlacePopup
+        isAddPlacePopupOpen={isAddPlacePopupOpen}
+        handleCloseAllPopups={handleCloseAllPopups}
+        onAddCard={handleAddCard}>
+        </AddPlacePopup>        
         
         {/*Попап удаления карточки*/}
         <PopupWithForm 
@@ -152,31 +147,17 @@ function App() {
         </PopupWithForm>
         
         {/*Попап редактирования аватара*/}
-        <PopupWithForm 
-            title='Обновить аватар' 
-            name='edit-avatar-popup'
-            textSubmitButton='Сохранить'
-            isOpen={isEditAvatarPopupOpen}
-            onClose={handleCloseAllPopups}>
-                <fieldset className="form-popup__inputs">
-                    <input 
-                        type="url" 
-                        id='avatar-input' 
-                        name="avatar" 
-                        className="form-popup__input form-popup__input_type_avatar" 
-                        placeholder="Ссылка на изображение" 
-                        required 
-                    />
-                    <span className="avatar-input-error form-popup__error"></span>
-                </fieldset>
-        </PopupWithForm>
+        <EditAvatarPopup
+          isEditAvatarPopupOpen={isEditAvatarPopupOpen}
+          handleCloseAllPopups={handleCloseAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}>
+        </EditAvatarPopup>
          
          {/*Попап просмотра изображения карточки*/}
         <ImagePopup 
             card = {selectedCard}
             onClose={handleCloseAllPopups}
         />
-      </CardsContext.Provider>
       </CurrentUserContext.Provider>
     </>
   );

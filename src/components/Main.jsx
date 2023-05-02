@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useContext } from 'react';
-import api from '../utils/Api';
+import React, { useContext } from 'react';
 import Card from './Card';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
-import { CardsContext } from '../contexts/CardsContext';
+
 
 function Main ({onEditProfile,
                 onAddPlace,
                 onEditAvatar,
                 onCardClick,
                 onCardLike,
-                onCardDelete
+                onCardDelete,
+                cards
             }) {
     const user = useContext(CurrentUserContext); //подписались на контекст текущего пользователя
-    const cards = useContext(CardsContext) //подписались на контекст карточек
+    /*const cards = useContext(CardsContext) //подписались на контекст карточек*/
     
        
 

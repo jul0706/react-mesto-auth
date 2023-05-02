@@ -43,9 +43,9 @@ export class Api {
 		});
 	}
 
-	addCard(data, configUrl) {
+	addCard(data) {
 		//метод добавленя карточки пользователем
-		return fetch(`${this._url}${configUrl}`, {
+		return fetch(`${this._url}cards`, {
 			method: 'POST',
 			headers: {
 				authorization: this._token,
@@ -62,7 +62,7 @@ export class Api {
 	}
 
 	deleteCard(cardId) {
-		return fetch(`${this._url}/cards/${cardId}`, {
+		return fetch(`${this._url}cards/${cardId}`, {
 			method: 'DELETE',
 			headers: {
 				authorization: this._token
@@ -76,7 +76,7 @@ export class Api {
 	likeCard(cardId, isLiked) {
 		if (isLiked) {
 			//если пользователь лайкал карточку
-			return fetch(`${this._url}/cards/${cardId}/likes`, {
+			return fetch(`${this._url}cards/${cardId}/likes`, {
 				// вернули запрос
 				method: 'DELETE', //удалить лайк
 				headers: {
@@ -88,7 +88,7 @@ export class Api {
 			});
 		} else {
 			//если пользователь не лайкал карточку
-			return fetch(`${this._url}/cards/${cardId}/likes`, {
+			return fetch(`${this._url}cards/${cardId}/likes`, {
 				// вернули запрос
 				method: 'PUT', //добавить лайк
 				headers: {
@@ -101,9 +101,9 @@ export class Api {
 		}
 	}
 
-	changeAvatar(data, configUrl) {
+	changeAvatar(data) {
 		//изменение аватара пользователя
-		return fetch(`${this._url}${configUrl}`, {
+		return fetch(`${this._url}users/me/avatar`, {
 			method: 'PATCH',
 			headers: {
 				authorization: this._token,
