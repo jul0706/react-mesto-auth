@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import PopupWithForm from "./PopupWithForm";
 
 function AddPlacePopup ({isAddPlacePopupOpen, handleCloseAllPopups, onAddCard}) {
@@ -6,14 +6,19 @@ function AddPlacePopup ({isAddPlacePopupOpen, handleCloseAllPopups, onAddCard}) 
     const nameInputRef = useRef();
     const linkInputRef = useRef();
 
-    function handleSubmit (e) {
+    useEffect(()=>{ //очистка полей ввода при открытии/закрытии попапа
+        if (!isAddPlacePopupOpen) { //если попап закрывается
+            nameInputRef.current.value=''; //очистить
+            linkInputRef.current.value='';
+        }
+    },[isAddPlacePopupOpen])
+
+    function handleSubmit (e) { //отправка формы
         e.preventDefault();
         onAddCard({ //обновили информацию о пользователе
             name:nameInputRef.current.value,
             link:linkInputRef.current.value
         })
-        nameInputRef.current.value = '';
-        linkInputRef.current.value = '';
     }
     return (
         <PopupWithForm 

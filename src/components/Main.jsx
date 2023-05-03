@@ -11,10 +11,7 @@ function Main ({onEditProfile,
                 onCardDelete,
                 cards
             }) {
-    const user = useContext(CurrentUserContext); //подписались на контекст текущего пользователя
-    /*const cards = useContext(CardsContext) //подписались на контекст карточек*/
-    
-       
+    const user = useContext(CurrentUserContext); //подписались на контекст текущего пользователя       
 
     return (
         <main className="main"> 
@@ -37,14 +34,13 @@ function Main ({onEditProfile,
             <section className="places">
                 {/*Заготовка для карточки*/}
                 {cards.map((card) => ( // каждую карточку из массива добавляем на страницу
-                    <div key = {card._id}>
                     <Card 
+                        key = {card._id}
                         cardData = {card} 
                         onCardClick = {onCardClick}
                         onCardLike = {onCardLike}
                         onCardDelete = {onCardDelete}
                     />
-                    </div>
                 ))}
             </section>
         </main>

@@ -29,7 +29,7 @@ function EditProfilePopup ({isOpen, onClose, onUpdateUser}) {
             setName(user.name);
             setDescription(user.about);
         }
-    }, [user]);
+    }, [user, isOpen]);
     
     return (
         <PopupWithForm

@@ -17,22 +17,21 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   
-  const [currentUser, setCurrentUser] = useState(''); //стейт текущего пользователя
+  const [currentUser, setCurrentUser] = useState({}); //стейт текущего пользователя
   const [cards, setCards] = useState([]); //стейт карточек
 
   function displayError (err) { //показ ошибки от сервера
     alert(err)
   };
 
-  useEffect(()=>{ //получили данные карточек
+  useEffect(()=>{ //при загрузке страницы получили данные карточек и пользователя
+    
     api.getDataServer('cards')
     .then((res)=>{
         setCards(res) //сохранили в стейт cards
     })
     .catch(err => displayError(err));
-  },[])
-  
-  useEffect(()=>{ //получили данные пользователя
+    
     api.getDataServer('users/me')
     .then((res)=>{
       setCurrentUser(res); //сохранили в стэйт currentUser

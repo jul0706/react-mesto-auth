@@ -1,16 +1,21 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import PopupWithForm from "./PopupWithForm";
 
 function EditAvatarPopup ({isEditAvatarPopupOpen, handleCloseAllPopups, onUpdateAvatar}) {
 
     const inputRef = useRef();
 
+    useEffect(()=>{ //очистка полей ввода при открытии/закрытии попапа
+        if (!isEditAvatarPopupOpen) { //если попап закрывается
+            inputRef.current.value=''; //очистить
+        }
+    },[isEditAvatarPopupOpen])
+
     function handleSubmit (e) {
         e.preventDefault();
         onUpdateAvatar({ //обновили информацию о пользователе
             avatar: inputRef.current.value
         })
-        inputRef.current.value = '';
     }
     return (
         <PopupWithForm 
