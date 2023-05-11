@@ -2,6 +2,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import Main from "./Main";
 import React, {useEffect, useState} from 'react';
+import { Route, Routes } from "react-router-dom";
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import api from '../utils/Api';
@@ -9,6 +10,9 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
+import Login from "./Login";
+import Register from "./Register";
+import InfoTooltip from './InfoTooltip';
 
 function App() {
   {/*стейты для попапов*/}
@@ -112,17 +116,35 @@ function App() {
   return (
     <>
       <CurrentUserContext.Provider value={currentUser}>
-        <Header />        
-        <Main 
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onCardClick={handleCardImageClick}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
-          cards={cards}
-        />
-        <Footer /> 
+        <Header /> 
+        
+        {/*<Routes>
+          <Route //роут для зарегистрированных пользователей с основным содержимым
+            path="/"
+            element={
+              <Main 
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                onEditAvatar={handleEditAvatarClick}
+                onCardClick={handleCardImageClick}
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
+                cards={cards}
+              />
+            }
+          />
+
+          <Route //роут для регистрации
+            path="/sign-up"
+            element={<Register/>}
+          />
+
+          <Route //роут для авторизации
+            path="/sign-in"
+            element={<Login/>}
+          />
+        </Routes>
+        */}
         {/*Попап: Форма редактирования профиля*/}
         <EditProfilePopup 
           isOpen={isEditProfilePopupOpen}
@@ -157,6 +179,7 @@ function App() {
             card = {selectedCard}
             onClose={handleCloseAllPopups}
         />
+        <Footer />
       </CurrentUserContext.Provider>
     </>
   );

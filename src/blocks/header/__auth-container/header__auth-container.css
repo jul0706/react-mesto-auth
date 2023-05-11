@@ -1,0 +1,15 @@
+.header__auth-container {
+    margin: 34px 30px 33px;
+    display: grid;
+    grid-template-rows: repeat(2, auto);
+    gap: 18px;
+}
+
+@media screen and (min-width: 924px) {
+    .header__auth-container {
+        margin: 51px 0 46px 0;
+        gap: 24px;
+        grid-template-columns: repeat(2, auto);
+        grid-template-rows: repeat(1, auto);
+    }
+}
