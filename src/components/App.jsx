@@ -1,8 +1,8 @@
 import Header from "./Header";
 import Footer from "./Footer";
 import Main from "./Main";
-import React, {useEffect, useState} from 'react';
-import { Route, Routes } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import api from '../utils/Api';
@@ -13,53 +13,63 @@ import AddPlacePopup from "./AddPlacePopup";
 import Login from "./Login";
 import Register from "./Register";
 import InfoTooltip from './InfoTooltip';
+import ProtectedRouteElement from "./ProtectedRoute";
+import { auth } from "../utils/auth";
 
 function App() {
-  {/*стейты для попапов*/}
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false); 
+  {/*стейты для попапов*/ }
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
-  
+
+
   const [currentUser, setCurrentUser] = useState({}); //стейт текущего пользователя
   const [cards, setCards] = useState([]); //стейт карточек
+  const [loggedIn, setLoggedIn] = useState(false) //стейт авторизации пользователя
+  const [email, setEmail] = useState('')//стэйт почты пользователя
 
-  function displayError (err) { //показ ошибки от сервера
+  const navigate = useNavigate();
+
+  function displayError(err) { //показ ошибки от сервера
     alert(err)
   };
 
-  useEffect(()=>{ //при загрузке страницы получили данные карточек и пользователя
-    
-    api.getDataServer('cards')
-    .then((res)=>{
+  useEffect(() => { //при загрузке страницы 
+
+    api.getDataServer('cards') //получили данные карточек и пользователя
+      .then((res) => {
         setCards(res) //сохранили в стейт cards
-    })
-    .catch(err => displayError(err));
-    
+      })
+      .catch(err => displayError(err));
+
     api.getDataServer('users/me')
-    .then((res)=>{
-      setCurrentUser(res); //сохранили в стэйт currentUser
-    })
-    .catch(err => displayError(err));
-  },[])
+      .then((res) => {
+        setCurrentUser(res); //сохранили в стэйт currentUser
+      })
+      .catch(err => displayError(err));
+
+    checkToken();//проверили токен пользователя
+  }, [])
+
 
   //функции бработчики - изменяют переменную состояния открытия попапов
-  function handleEditAvatarClick () { 
+  function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
-  function handleEditProfileClick () {
+  function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
   }
 
-  function handleAddPlaceClick () {
+  function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
   }
 
-  function handleCardImageClick (card) {
+  function handleCardImageClick(card) {
     setSelectedCard(card);
   }
 
-  function handleCloseAllPopups () {
+  function handleCloseAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
@@ -67,62 +77,80 @@ function App() {
   }
 
   function handleCardLike(card) { //лайк/дизлайк карточки
-    const isUserLiked = card.likes.some((userLiked)=>{ //лайкал ли пользователь карточку
+    const isUserLiked = card.likes.some((userLiked) => { //лайкал ли пользователь карточку
       return userLiked._id === currentUser._id
     })
     api.likeCard(card._id, isUserLiked) //запрос на постановку/снятие лайка
-      .then((newCard)=>{
-        setCards((state)=> state.map((c) => c._id === card._id ? newCard : c))
+      .then((newCard) => {
+        setCards((state) => state.map((c) => c._id === card._id ? newCard : c))
       })
       .catch(err => displayError(err));
   }
 
   function handleCardDelete(id) { //удаление карточки
-      api.deleteCard(id) //запрос на удаление карточки
-      .then(()=>{
-        setCards((state)=> state.filter((c) => c._id != id))
+    api.deleteCard(id) //запрос на удаление карточки
+      .then(() => {
+        setCards((state) => state.filter((c) => c._id != id))
       })
       .catch(err => displayError(err));
   }
 
-  function handleUpdateUser (userObject) {
+  function handleUpdateUser(userObject) { //обновление информации о пользователе
     api.editUserInfo(userObject)
-    .then((res) => {
-      setCurrentUser(res)
-    })
-    .catch(err => displayError(err));
+      .then((res) => {
+        setCurrentUser(res)
+      })
+      .catch(err => displayError(err));
     handleCloseAllPopups();
   }
 
-  function handleUpdateAvatar (userObject) {
+  function handleUpdateAvatar(userObject) { //обновление аватара
     api.changeAvatar(userObject)
-    .then((res) => {
-      setCurrentUser(res)
-    })
-    .catch(err => displayError(err));
+      .then((res) => {
+        setCurrentUser(res)
+      })
+      .catch(err => displayError(err));
     handleCloseAllPopups();
   }
 
-  function handleAddCard (data) {
+  function handleAddCard(data) { //добавление карточки
     api.addCard(data)
-    .then((newCard) => {
-      setCards([newCard, ...cards ])
-    })
-    .catch(err => displayError(err));
+      .then((newCard) => {
+        setCards([newCard, ...cards])
+      })
+      .catch(err => displayError(err));
     handleCloseAllPopups();
   }
 
-  
+  function handleLogin(isLogin) { //вход/выход на сайт
+    setLoggedIn(isLogin);
+  }
+
+  function checkToken() { //проверка токена
+    if (localStorage.getItem('token')) { //если в памяти браузера есть токен
+      const token = localStorage.getItem('token');
+      auth.checkToken(token)
+        .then((data) => {
+          setLoggedIn(true);
+          console.log(data.data.email)
+          setEmail(data.data.email);
+          navigate('/mesto-react', { replace: true });
+
+        })
+        .catch(err => displayError(err));
+    }
+  }
+
+
   return (
     <>
       <CurrentUserContext.Provider value={currentUser}>
-        <Header /> 
-        
-        {/*<Routes>
+        <Header isLoggedIn={loggedIn} user={currentUser} userEmail={email} onLogout={handleLogin} />
+        <Routes>
           <Route //роут для зарегистрированных пользователей с основным содержимым
-            path="/"
+            path="/mesto-react"
             element={
-              <Main 
+              <ProtectedRouteElement element={Main}
                 onEditProfile={handleEditProfileClick}
                 onAddPlace={handleAddPlaceClick}
                 onEditAvatar={handleEditAvatarClick}
@@ -130,55 +158,64 @@ function App() {
                 onCardLike={handleCardLike}
                 onCardDelete={handleCardDelete}
                 cards={cards}
+                loggedIn={loggedIn}
               />
             }
           />
 
           <Route //роут для регистрации
             path="/sign-up"
-            element={<Register/>}
+            element={
+              <Register
+                userEmail={email}
+                setEmail={setEmail} />}
           />
 
           <Route //роут для авторизации
             path="/sign-in"
-            element={<Login/>}
+            element={
+              <Login
+                onLogin={handleLogin}
+                userEmail={email}
+                setEmail={setEmail}
+              />}
           />
         </Routes>
-        */}
         {/*Попап: Форма редактирования профиля*/}
-        <EditProfilePopup 
+        <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={handleCloseAllPopups}
           onUpdateUser={handleUpdateUser}
         />
         {/*Попап: Форма добавления карточки*/}
         <AddPlacePopup
-        isAddPlacePopupOpen={isAddPlacePopupOpen}
-        handleCloseAllPopups={handleCloseAllPopups}
-        onAddCard={handleAddCard}>
-        </AddPlacePopup>        
-        
+          isAddPlacePopupOpen={isAddPlacePopupOpen}
+          handleCloseAllPopups={handleCloseAllPopups}
+          onAddCard={handleAddCard}>
+        </AddPlacePopup>
+
         {/*Попап удаления карточки*/}
-        <PopupWithForm 
-            title='Вы уверены?' 
-            name='delete-popup'
-            textSubmitButton='Да'
-            isOpen={false}
-            onClose={handleCloseAllPopups}>
+        <PopupWithForm
+          title='Вы уверены?'
+          name='delete-popup'
+          textSubmitButton='Да'
+          isOpen={false}
+          onClose={handleCloseAllPopups}>
         </PopupWithForm>
-        
+
         {/*Попап редактирования аватара*/}
         <EditAvatarPopup
           isEditAvatarPopupOpen={isEditAvatarPopupOpen}
           handleCloseAllPopups={handleCloseAllPopups}
           onUpdateAvatar={handleUpdateAvatar}>
         </EditAvatarPopup>
-         
-         {/*Попап просмотра изображения карточки*/}
-        <ImagePopup 
-            card = {selectedCard}
-            onClose={handleCloseAllPopups}
+
+        {/*Попап просмотра изображения карточки*/}
+        <ImagePopup
+          card={selectedCard}
+          onClose={handleCloseAllPopups}
         />
+
         <Footer />
       </CurrentUserContext.Provider>
     </>
