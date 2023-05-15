@@ -35,24 +35,6 @@ function App() {
     alert(err)
   };
 
-  useEffect(() => { //при загрузке страницы 
-
-    api.getDataServer('cards') //получили данные карточек и пользователя
-      .then((res) => {
-        setCards(res) //сохранили в стейт cards
-      })
-      .catch(err => displayError(err));
-
-    api.getDataServer('users/me')
-      .then((res) => {
-        setCurrentUser(res); //сохранили в стэйт currentUser
-      })
-      .catch(err => displayError(err));
-
-    checkToken();//проверили токен пользователя
-  }, [])
-
-
   //функции бработчики - изменяют переменную состояния открытия попапов
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -65,10 +47,6 @@ function App() {
     setIsAddPlacePopupOpen(true);
   }
 
-  function handleCardImageClick(card) {
-    setSelectedCard(card);
-  }
-
   function handleCloseAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
@@ -76,7 +54,11 @@ function App() {
     setSelectedCard(null);
   }
 
-  function handleCardLike(card) { //лайк/дизлайк карточки
+  function handleCardImageClick(card) { // открытие попапа с изображением
+    setSelectedCard(card);
+  }
+
+  function handleCardLike(card) { // лайк/дизлайк карточки
     const isUserLiked = card.likes.some((userLiked) => { //лайкал ли пользователь карточку
       return userLiked._id === currentUser._id
     })
@@ -129,10 +111,9 @@ function App() {
   function checkToken() { //проверка токена
     if (localStorage.getItem('token')) { //если в памяти браузера есть токен
       const token = localStorage.getItem('token');
-      auth.checkToken(token)
+      auth.checkToken(token) //запрос к API на регистрацию
         .then((data) => {
           setLoggedIn(true);
-          console.log(data.data.email)
           setEmail(data.data.email);
           navigate('/mesto-react', { replace: true });
 
@@ -140,6 +121,23 @@ function App() {
         .catch(err => displayError(err));
     }
   }
+
+  useEffect(() => { //при загрузке страницы 
+
+    api.getDataServer('cards') //получили данные карточек и пользователя
+      .then((res) => {
+        setCards(res) //сохранили в стейт cards
+      })
+      .catch(err => displayError(err));
+
+    api.getDataServer('users/me')
+      .then((res) => {
+        setCurrentUser(res); //сохранили в стэйт currentUser
+      })
+      .catch(err => displayError(err));
+
+    checkToken();//проверили токен пользователя
+  }, [])
 
 
   return (

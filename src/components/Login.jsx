@@ -21,13 +21,13 @@ function Login({ onLogin, userEmail, setEmail, displayError }) {
             [name]: value
         });
     }
-    const handleSubmit = (e) => {
+    const handleSubmit = (e) => { //отправка формы авторизации
         e.preventDefault();
         if (!formValue.email || !formValue.password) { //если одно из полей не заполнено
             return;
         }
-        auth.login(formValue)
-            .then((res) => {
+        auth.login(formValue) //запрос к API на вход
+            .then(() => {
                 onLogin(true);
                 setEmail(formValue.email);
                 setPassword(formValue.password);

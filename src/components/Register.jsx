@@ -22,7 +22,7 @@ function Register({ userEmail, setEmail, displayError }) {
             [name]: value
         });
     }
-    const handleSubmit = (e) => {
+    const handleSubmit = (e) => { //отправка формы регистрации
         e.preventDefault();
         auth.register(formValue)
             .then((data) => {
