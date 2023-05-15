@@ -21,9 +21,11 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isInfoTooltipPopupOpen, setisInfoTooltipPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
 
 
+  const [isAuthComplete, setisAuthComplete] = useState(false); //стейт авторизации
   const [currentUser, setCurrentUser] = useState({}); //стейт текущего пользователя
   const [cards, setCards] = useState([]); //стейт карточек
   const [loggedIn, setLoggedIn] = useState(false) //стейт авторизации пользователя
@@ -52,6 +54,7 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setSelectedCard(null);
+    setisInfoTooltipPopupOpen(false)
   }
 
   function handleCardImageClick(card) { // открытие попапа с изображением
@@ -166,7 +169,10 @@ function App() {
             element={
               <Register
                 userEmail={email}
-                setEmail={setEmail} />}
+                setEmail={setEmail}
+                setisInfoTooltipPopupOpen={setisInfoTooltipPopupOpen}
+                setisAuthComplete={setisAuthComplete}
+              />}
           />
 
           <Route //роут для авторизации
@@ -176,6 +182,8 @@ function App() {
                 onLogin={handleLogin}
                 userEmail={email}
                 setEmail={setEmail}
+                setisInfoTooltipPopupOpen={setisInfoTooltipPopupOpen}
+                setisAuthComplete={setisAuthComplete}
               />}
           />
         </Routes>
@@ -204,8 +212,8 @@ function App() {
         {/*Попап редактирования аватара*/}
         <EditAvatarPopup
           isEditAvatarPopupOpen={isEditAvatarPopupOpen}
-          handleCloseAllPopups={handleCloseAllPopups}
-          onUpdateAvatar={handleUpdateAvatar}>
+          onUpdateAvatar={handleUpdateAvatar}
+          onClose={handleCloseAllPopups}>
         </EditAvatarPopup>
 
         {/*Попап просмотра изображения карточки*/}
@@ -214,6 +222,12 @@ function App() {
           onClose={handleCloseAllPopups}
         />
 
+        {/*Попап успешной/неуспешной авторизации */}
+        <InfoTooltip
+          isAuthComplete={isAuthComplete}
+          isOpen={isInfoTooltipPopupOpen}
+          onClose={handleCloseAllPopups}
+        />
         <Footer />
       </CurrentUserContext.Provider>
     </>

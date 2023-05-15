@@ -3,7 +3,7 @@ import { auth } from "../utils/auth";
 import { useState } from "react";
 
 
-function Register({ userEmail, setEmail, displayError }) {
+function Register({ userEmail, setEmail, setisInfoTooltipPopupOpen, setisAuthComplete }) {
 
     const [password, setPassword] = useState('') //стэйт пароля
 
@@ -27,10 +27,15 @@ function Register({ userEmail, setEmail, displayError }) {
         auth.register(formValue)
             .then((data) => {
                 setEmail(data.data.email);
-                setPassword(formValue.password)
-                navigate('/sign-in', { replace: true })
+                setPassword(formValue.password);
+                navigate('/sign-in', { replace: true });
+                setisAuthComplete(true);
+                setisInfoTooltipPopupOpen(true);
             })
-            .catch(err => displayError(err))
+            .catch(() => {
+                setisAuthComplete(false);
+                setisInfoTooltipPopupOpen(true);
+            })
     }
 
     return (

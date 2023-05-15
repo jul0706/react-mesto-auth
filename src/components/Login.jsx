@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import { auth } from "../utils/auth";
 
-function Login({ onLogin, userEmail, setEmail, displayError }) {
+function Login({ onLogin, userEmail, setEmail, setisInfoTooltipPopupOpen, setisAuthComplete }) {
 
     const [password, setPassword] = useState('');
 
@@ -34,7 +34,10 @@ function Login({ onLogin, userEmail, setEmail, displayError }) {
                 setFormValue({ email: '', password: '' });
                 navigate('/mesto-react', { replace: true });
             })
-            .catch(err => displayError(err))
+            .catch(() => {
+                setisAuthComplete(false);
+                setisInfoTooltipPopupOpen(true);
+            })
     }
 
     return (
