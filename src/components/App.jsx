@@ -24,7 +24,6 @@ function App() {
   const [isInfoTooltipPopupOpen, setisInfoTooltipPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
 
-
   const [isAuthComplete, setisAuthComplete] = useState(false); //стейт авторизации
   const [currentUser, setCurrentUser] = useState({}); //стейт текущего пользователя
   const [cards, setCards] = useState([]); //стейт карточек
