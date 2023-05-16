@@ -148,7 +148,7 @@ function App() {
         <Header isLoggedIn={loggedIn} user={currentUser} userEmail={email} onLogout={handleLogin} />
         <Routes>
           <Route //роут для зарегистрированных пользователей с основным содержимым
-            path="/mesto-react"
+            path="/react-mesto-auth"
             element={
               <ProtectedRouteElement element={Main}
                 onEditProfile={handleEditProfileClick}
