@@ -36,12 +36,6 @@ class Auth {
       .then((res) => { //проверили ответ
         return this._checkResolve(res);
       })
-      .then((data) => {
-        if (data.token) {
-          localStorage.setItem('token', data.token); //сохранили токен
-          return data;
-        }
-      });
   }
 
   checkToken (token) {

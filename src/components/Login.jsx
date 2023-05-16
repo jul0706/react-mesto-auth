@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
-import { auth } from "../utils/auth";
+import { auth } from "../utils/Auth";
 
 function Login({ onLogin, userEmail, setEmail, setisInfoTooltipPopupOpen, setisAuthComplete }) {
 
@@ -21,13 +21,14 @@ function Login({ onLogin, userEmail, setEmail, setisInfoTooltipPopupOpen, setisA
             [name]: value
         });
     }
-    const handleSubmit = (e) => { //отправка формы авторизации
+    const handleLogin = (e) => { //отправка формы авторизации
         e.preventDefault();
         if (!formValue.email || !formValue.password) { //если одно из полей не заполнено
             return;
         }
         auth.login(formValue) //запрос к API на вход
-            .then(() => {
+            .then((data) => {
+                localStorage.setItem('token', data.token); //сохранили токен
                 onLogin(true);
                 setEmail(formValue.email);
                 setPassword(formValue.password);
@@ -35,15 +36,15 @@ function Login({ onLogin, userEmail, setEmail, setisInfoTooltipPopupOpen, setisA
                 navigate('/mesto-react', { replace: true });
             })
             .catch(() => {
-                setisAuthComplete(false);
-                setisInfoTooltipPopupOpen(true);
+                setisAuthComplete(false); // авторизация не успешна
+                setisInfoTooltipPopupOpen(true); //открыть попап
             })
     }
 
     return (
         <div className="login">
             <h2 className="login__title">Вход</h2>
-            <form onSubmit={handleSubmit} className="login__form">
+            <form onSubmit={handleLogin} className="login__form">
                 <input
                     type="email"
                     name="email"
