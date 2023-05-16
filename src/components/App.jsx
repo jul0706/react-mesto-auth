@@ -14,7 +14,7 @@ import Login from "./Login";
 import Register from "./Register";
 import InfoTooltip from './InfoTooltip';
 import ProtectedRouteElement from "./ProtectedRoute";
-import { auth } from "../utils/Auth";
+import { auth } from "../utils/auth";
 
 function App() {
   {/*стейты для попапов*/ }

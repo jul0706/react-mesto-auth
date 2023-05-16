@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { auth } from "../utils/Auth";
+import { auth } from "../utils/auth";
 import { useState } from "react";
 
 
