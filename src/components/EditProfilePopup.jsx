@@ -6,16 +6,6 @@ import { useState } from "react";
 function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
 
     const user = React.useContext(CurrentUserContext); //подписались на контекст текущего пользователя
-    /*const [name, setName] = React.useState('');
-    const [about, setAbout] = React.useState('');
-
-    /*function handleChange (e) {
-        if (e.target.name === 'name') {
-            setName(e.target.value)
-        } else {
-            setDescription(e.target.value)
-        }
-    }*/
 
     const [formValue, setFormValue] = useState({ //стэйт формы 
         name: "",

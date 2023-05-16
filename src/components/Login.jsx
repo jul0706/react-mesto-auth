@@ -33,7 +33,7 @@ function Login({ onLogin, userEmail, setEmail, setisInfoTooltipPopupOpen, setisA
                 setEmail(formValue.email);
                 setPassword(formValue.password);
                 setFormValue({ email: '', password: '' });
-                navigate('/mesto-react', { replace: true });
+                navigate('/react-mesto-auth', { replace: true });
             })
             .catch(() => {
                 setisAuthComplete(false); // авторизация не успешна

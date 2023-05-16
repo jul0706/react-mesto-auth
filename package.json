@@ -1,6 +1,6 @@
 {
   "homepage": "https://jul0706.github.io/react-mesto-auth/",
-  "name": "mesto-react",
+  "name": "react-mesto-auth",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -40,11 +40,6 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^5.0.0",
-    "prettier": "2.8.7"
-  },
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "gh-pages": "^5.0.0"
   }
 }
