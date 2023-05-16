@@ -29,9 +29,9 @@ function Header({ isLoggedIn, userEmail, onLogout }) {
                     type='button'
                     className='header__button'
                     onClick={
-                        isLoggedIn ? logOut : (window.location.href === 'http://localhost:3000/sign-in' ? redirectToRegistration : redirectToLogin)
+                        isLoggedIn ? logOut : (window.location.href.endsWith('sign-in') ? redirectToRegistration : redirectToLogin)
                     }>
-                    {isLoggedIn ? 'Выйти' : (window.location.href === 'http://localhost:3000/sign-in' ? 'Регистрация' : 'Войти')}
+                    {isLoggedIn ? 'Выйти' : (window.location.href.endsWith('sign-in') ? 'Регистрация' : 'Войти')}
                 </button>
             </div>
         </header>
