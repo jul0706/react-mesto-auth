@@ -29,6 +29,19 @@ function App() {
   const [cards, setCards] = useState([]); //стейт карточек
   const [loggedIn, setLoggedIn] = useState(false) //стейт авторизации пользователя
   const [email, setEmail] = useState('')//стэйт почты пользователя
+  const [formValue, setFormValue] = useState({ //стэйт формы авторизации и регистрации
+    email: '',
+    password: ''
+  })
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormValue({
+      ...formValue,
+      [name]: value
+    });
+  }
 
   const navigate = useNavigate();
 
@@ -82,28 +95,29 @@ function App() {
   function handleUpdateUser(userObject) { //обновление информации о пользователе
     api.editUserInfo(userObject)
       .then((res) => {
-        setCurrentUser(res)
+        setCurrentUser(res);
+        handleCloseAllPopups();
       })
       .catch(err => displayError(err));
-    handleCloseAllPopups();
+
   }
 
   function handleUpdateAvatar(userObject) { //обновление аватара
     api.changeAvatar(userObject)
       .then((res) => {
-        setCurrentUser(res)
+        setCurrentUser(res);
+        handleCloseAllPopups();
       })
       .catch(err => displayError(err));
-    handleCloseAllPopups();
   }
 
   function handleAddCard(data) { //добавление карточки
     api.addCard(data)
       .then((newCard) => {
-        setCards([newCard, ...cards])
+        setCards([newCard, ...cards]);
+        handleCloseAllPopups();
       })
       .catch(err => displayError(err));
-    handleCloseAllPopups();
   }
 
   function handleLogin(isLogin) { //вход/выход на сайт
@@ -167,10 +181,13 @@ function App() {
             path="/sign-up"
             element={
               <Register
+                onChange={handleChange}
+                formValue={formValue}
                 userEmail={email}
                 setEmail={setEmail}
                 setisInfoTooltipPopupOpen={setisInfoTooltipPopupOpen}
                 setisAuthComplete={setisAuthComplete}
+                setFormValue={setFormValue}
               />}
           />
 
@@ -178,11 +195,14 @@ function App() {
             path="/sign-in"
             element={
               <Login
+                onChange={handleChange}
+                formValue={formValue}
                 onLogin={handleLogin}
                 userEmail={email}
                 setEmail={setEmail}
                 setisInfoTooltipPopupOpen={setisInfoTooltipPopupOpen}
                 setisAuthComplete={setisAuthComplete}
+                setFormValue={setFormValue}
               />}
           />
         </Routes>
