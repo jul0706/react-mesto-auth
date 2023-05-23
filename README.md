@@ -17,10 +17,10 @@
 - разметка и стилизация форм
 - анимация
 
-<div>
+<div style="display: greed; gap: 20px; grid-template-columns: repeat(3, 300px)">
   <img src="./место  титул.png" title="Mesto" alt="главная страница проекта Место" width="300" height="300"/>&nbsp;
   <img src="./место новое.png" title="Mesto" alt="добавление новой карточки" width="300" height="300"/>&nbsp;
-  <img src="./место регистр.png" title="Mesto" alt="авторизация пользователя" style="object-fit:contain; width="300px"; height="300px""/>&nbsp;
+  <img src="./место регистр.png" title="Mesto" alt="авторизация пользователя" width="300px"; height="300px"/>&nbsp;
 </div>
 
 Ссылка на проект: https://jul0706.github.io/react-mesto-auth/
