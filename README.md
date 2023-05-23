@@ -20,7 +20,7 @@
 <div>
   <img src="./место  титул.png" title="Mesto" alt="главная страница проекта Место" width="300" height="300"/>&nbsp;
   <img src="./место новое.png" title="Mesto" alt="добавление новой карточки" width="300" height="300"/>&nbsp;
-  <img src="./место регистр.png" title="Mesto" alt="авторизация пользователя" width="300" height="300"/>&nbsp;
+  <img src="./место регистр.png" title="Mesto" alt="авторизация пользователя" style="object-fit:cover width="300" height="300""/>&nbsp;
 </div>
 
 Ссылка на проект: https://jul0706.github.io/react-mesto-auth/
