@@ -19,7 +19,7 @@
 
 <div style="display: greed; gap: 20px; grid-template-columns: repeat(3, 300px)">
   <img src="./место  титул.png" title="Mesto" alt="главная страница проекта Место" width="300" height="300"/>&nbsp;
-  <img src="./место новое.png" title="Mesto" alt="добавление новой карточки" width="300" height="300" style="object-fit:cover"/>&nbsp;
+  <img src="./место новое.png" title="Mesto" alt="добавление новой карточки" width="300" height="300" style="object-fit:contain"/>&nbsp;
   <img src="./место регистр.png" title="Mesto" alt="авторизация пользователя" width="300px"; height="300px"/>&nbsp;
 </div>
 
